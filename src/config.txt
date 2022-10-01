@@ -1,0 +1,4 @@
+postgres
+LinkinPark20
+jdbc:postgresql://localhost:5432/HearBase
+org.postgresql.Driver

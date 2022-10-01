@@ -1,0 +1,4 @@
+root
+LinkinPark20!
+jdbc:mysql://localhost:3306/hearbase
+com.mysql.cj.jdbc.Driver

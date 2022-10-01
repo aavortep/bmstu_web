@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+          xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.example.src.MainPageController"
+          alignment="center" hgap="10" vgap="10">
+
+    <ScrollPane fx:id="scrollPane" GridPane.columnIndex="0" GridPane.rowIndex="0">
+    </ScrollPane>
+
+    <Label text="ID of the room you want to book:"
+           GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+    <TextField fx:id="roomIdField"
+               GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+    <Label text="Rehearsal hour:"
+           GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+    <TextField fx:id="hourField"
+               GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+    <Label fx:id="error" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="2">
+        <Button text="Book"
+                onAction="#onBookButtonClick"/>
+    </HBox>
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <Button text="Show booked"
+                onAction="#onShowButtonClick"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="5">
+        <Button text="Register base"
+                onAction="#onRegBaseButtonClick"/>
+    </HBox>
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="2" GridPane.rowIndex="6">
+        <Button text="Delete account"
+                onAction="#onDelButtonClick"/>
+    </HBox>
+</GridPane>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.src.OwnerController"
+            alignment="center" hgap="10" vgap="10">
+
+    <Label text="Base info:" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <Label text="Room info:" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+    <Label text="Equipment info:" GridPane.columnIndex="4" GridPane.rowIndex="0"/>
+
+    <Label text="name:"
+           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <TextField fx:id="baseNameField"
+               GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <Label text="Address:"
+           GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <TextField fx:id="addressField"
+               GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+    <Label text="Phone:"
+           GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <TextField fx:id="phoneField"
+               GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+    <Label text="Mail:"
+           GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+    <TextField fx:id="mailField"
+               GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+    <Label text="name:"
+           GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+    <TextField fx:id="nameField"
+               GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+    <Label text="Type:"
+           GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+    <TextField fx:id="typeField"
+               GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+    <Label text="Area:"
+           GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+    <TextField fx:id="areaField"
+               GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+    <Label text="Cost:"
+           GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+    <TextField fx:id="costField"
+               GridPane.columnIndex="3" GridPane.rowIndex="4"/>
+
+    <Label text="Type:"
+           GridPane.columnIndex="4" GridPane.rowIndex="1"/>
+    <TextField fx:id="equipTypeField"
+               GridPane.columnIndex="5" GridPane.rowIndex="1"/>
+
+    <Label text="Brand:"
+           GridPane.columnIndex="4" GridPane.rowIndex="2"/>
+    <TextField fx:id="brandField"
+               GridPane.columnIndex="5" GridPane.rowIndex="2"/>
+
+    <Label text="Amount:"
+           GridPane.columnIndex="4" GridPane.rowIndex="3"/>
+    <TextField fx:id="amountField"
+               GridPane.columnIndex="5" GridPane.rowIndex="3"/>
+
+    <Label fx:id="error" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="3" GridPane.rowIndex="6">
+        <Button text="Submit"
+                onAction="#onSubmitButtonClick"/>
+    </HBox>
+</GridPane>
