@@ -1,0 +1,1064 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swagger HearBase - OpenAPI 3.0",
+    "version": "1.0.11"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8000/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "user",
+      "description": "Operations about user"
+    },
+    {
+      "name": "musician",
+      "description": "Operations of musician"
+    },
+    {
+      "name": "owner",
+      "description": "Operations of owner"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Create user",
+        "operationId": "createUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs user into the system",
+        "operationId": "loginUser",
+        "parameters": [
+          {
+            "name": "mail",
+            "in": "query",
+            "description": "The user email for login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "The user password for login",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "headers": {
+              "X-Rate-Limit": {
+                "description": "calls per hour allowed by the user",
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "X-Expires-After": {
+                "description": "date in UTC when token expires",
+                "schema": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/logout": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Logs out current logged in user session",
+        "operationId": "logoutUser",
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}": {
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of user that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid userId supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/rooms": {
+      "get": {
+        "tags": [
+          "musician"
+        ],
+        "summary": "Finds all registered rooms",
+        "operationId": "findAllRooms",
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Room"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/bases/{baseId}/rooms/{roomId}": {
+      "get": {
+        "tags": [
+          "musician"
+        ],
+        "summary": "Finds room by base and room ID",
+        "operationId": "findRoom",
+        "parameters": [
+          {
+            "name": "baseId",
+            "in": "path",
+            "description": "ID of reh base",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "roomId",
+            "in": "path",
+            "description": "ID of room to return",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID value"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Room not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/rehearsals": {
+      "get": {
+        "tags": [
+          "musician"
+        ],
+        "summary": "Finds all rehearsals of specified musician",
+        "operationId": "findRehsByUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of musician",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rehearsal"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rehearsal"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/rehearsals/{rehearId}": {
+      "get": {
+        "tags": [
+          "musician"
+        ],
+        "summary": "Finds the rehearsal by ID",
+        "operationId": "findReh",
+        "parameters": [
+          {
+            "name": "rehearId",
+            "in": "path",
+            "description": "ID of rehearsal",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rehearsal"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rehearsal"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Rehearsal not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/rooms/{roomId}/rehearsals": {
+      "post": {
+        "tags": [
+          "musician"
+        ],
+        "summary": "Creates a rehearsal",
+        "operationId": "createReh",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of musician",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "roomId",
+            "in": "path",
+            "description": "ID of room",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "date and time of rehearsal",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rehearsal"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rehearsal"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/rehearsals/{rehId}": {
+      "delete": {
+        "tags": [
+          "musician"
+        ],
+        "summary": "Deletes a rehearsal",
+        "operationId": "deleteReh",
+        "parameters": [
+          {
+            "name": "rehId",
+            "in": "path",
+            "description": "ID of rehearsal to delete",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Rehearsal not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/user/{userId}/bases": {
+      "get": {
+        "tags": [
+          "owner"
+        ],
+        "summary": "Finds all owner's bases",
+        "operationId": "findBases",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of owner",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RehBase"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RehBase"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/bases/{baseId}/rehearsals": {
+      "get": {
+        "tags": [
+          "owner"
+        ],
+        "summary": "Finds all rehearsals by base",
+        "operationId": "findRehsByBase",
+        "parameters": [
+          {
+            "name": "baseId",
+            "in": "path",
+            "description": "ID of reh base",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rehearsal"
+                  }
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rehearsal"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/users/{userId}/bases": {
+      "post": {
+        "tags": [
+          "owner"
+        ],
+        "summary": "Creates a reh base",
+        "operationId": "createBase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RehBase"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/RehBase"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RehBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "ID of owner",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RehBase"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/bases/{baseId}/rooms": {
+      "post": {
+        "tags": [
+          "owner"
+        ],
+        "summary": "Creates room in reh base",
+        "operationId": "createRoom",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Room"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "baseId",
+            "in": "path",
+            "description": "ID of reh base",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Room"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "405": {
+            "description": "Invalid input"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    },
+    "/bases/{baseId}": {
+      "patch": {
+        "tags": [
+          "owner"
+        ],
+        "summary": "Update an existing base",
+        "operationId": "updateBase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RehBase"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "$ref": "#/components/schemas/RehBase"
+              }
+            },
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/RehBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "parameters": [
+          {
+            "name": "baseId",
+            "in": "path",
+            "description": "ID of reh base",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RehBase"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/RehBase"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Reh base not found"
+          },
+          "405": {
+            "description": "Validation exception"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "owner"
+        ],
+        "summary": "Delete reh base by ID",
+        "operationId": "deleteBase",
+        "parameters": [
+          {
+            "name": "baseId",
+            "in": "path",
+            "description": "ID of reh base that needs to be deleted",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Reh base not found"
+          }
+        },
+        "security": [
+          {
+            "api_key": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Room": {
+        "required": [
+          "id",
+          "base",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "yellow"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "band",
+              "vocal",
+              "drum"
+            ]
+          },
+          "area": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "base": {
+            "$ref": "#/components/schemas/RehBase"
+          }
+        },
+        "xml": {
+          "name": "room"
+        }
+      },
+      "RehBase": {
+        "required": [
+          "id",
+          "owner",
+          "name",
+          "address"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "yellow"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "owner": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "xml": {
+          "name": "rehbase"
+        }
+      },
+      "User": {
+        "required": [
+          "id",
+          "name",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "Anna"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "mail": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "xml": {
+          "name": "account"
+        }
+      },
+      "Rehearsal": {
+        "required": [
+          "id",
+          "musician",
+          "room",
+          "date"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 10
+          },
+          "date": {
+            "type": "string"
+          },
+          "room": {
+            "$ref": "#/components/schemas/Room"
+          },
+          "musician": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "xml": {
+          "name": "rehearsal"
+        }
+      }
+    },
+    "requestBodies": {
+      "Room": {
+        "description": "Room object that needs to be added",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Room"
+            }
+          },
+          "application/xml": {
+            "schema": {
+              "$ref": "#/components/schemas/Room"
+            }
+          }
+        }
+      },
+      "UserArray": {
+        "description": "List of user object",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "API key is missing or invalid",
+        "headers": {
+          "WWW_Authenticate": {
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "hearbase_auth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "http://localhost:8000/oauth/authorize",
+            "scopes": {
+              "write": "modify in your account",
+              "read": "read in your account"
+            }
+          }
+        }
+      },
+      "api_key": {
+        "type": "apiKey",
+        "name": "api_key",
+        "in": "header"
+      }
+    }
+  }
+}
