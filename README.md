@@ -43,3 +43,9 @@
 ## ER диаграмма сущностей
 
 ![er](./diagrams/ER.png)
+
+## Макет
+
+[Moodboard](https://pin.it/26hMJGB)
+
+[Макет в Figma](https://www.figma.com/file/ErWhliStRD3pMacy1i9mi7/HearBase?node-id=2%3A3&t=h2OD2t5PUNiXWcSZ-1)
