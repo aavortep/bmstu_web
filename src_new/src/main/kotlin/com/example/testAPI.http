@@ -1,0 +1,7 @@
+POST http://127.0.0.1:8080/api/v1/login
+Content-Type: application/json
+
+{
+  "mail": "nura.alexevna@yandex.ru",
+  "password": "1234"
+}
