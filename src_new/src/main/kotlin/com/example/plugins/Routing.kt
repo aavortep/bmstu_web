@@ -43,12 +43,12 @@ fun Application.configureRouting() {
                     .withClaim("password", user.password)
                     .sign(Algorithm.HMAC256("secret"))
                 // sends a token to a client as a JSON object
-                call.respond(hashMapOf("token" to token))
+                //call.respond(hashMapOf("token" to token))
 
                 if (account != null) {
                     when (account.type) {
-                        "musician" -> call.respondRedirect("/rooms")
-                        "owner" -> call.respondRedirect("/users/${account.id}/bases/all")
+                        "musician" -> call.respondRedirect("/api/v1/rooms")
+                        "owner" -> call.respondRedirect("/api/v1/users/${account.id}/bases/all")
                     }
                 }
             }
@@ -78,8 +78,8 @@ fun Application.configureRouting() {
                 call.respond(hashMapOf("token" to token))
 
                 when (type) {
-                    "musician" -> call.respondRedirect("/rooms")
-                    "owner" -> call.respondRedirect("/users/${account?.id}/bases/all")
+                    "musician" -> call.respondRedirect("/api/v1/rooms")
+                    "owner" -> call.respondRedirect("/api/v1/users/${account?.id}/bases/all")
                     else -> call.response.status(HttpStatusCode.BadRequest)
                 }
             }
