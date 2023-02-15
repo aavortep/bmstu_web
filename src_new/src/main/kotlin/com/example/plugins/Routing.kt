@@ -19,12 +19,17 @@ import com.example.models.Room
 import com.google.gson.Gson
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
+import io.ktor.server.http.content.*
 
 fun Application.configureRouting() {
 
     // Starting point for a Ktor app:
     routing {
         route("api/v1") {
+            static {
+                resource("doc/swagger.yaml", "doc/swagger.yaml")
+                resource("doc", "doc/index.html")
+            }
             get {
                 call.respondText { "Welcome to HearBase!" }
             }
