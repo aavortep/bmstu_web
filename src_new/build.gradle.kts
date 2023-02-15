@@ -7,6 +7,7 @@ plugins {
     kotlin("jvm") version "1.7.20"
     id("io.ktor.plugin") version "2.1.2"
     id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.21"
 }
 
 group = "com.example"
