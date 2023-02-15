@@ -1,9 +1,11 @@
 package com.example.models
 
+import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.ForeignKeyConstraint
 import org.jetbrains.exposed.sql.ReferenceOption
 import org.jetbrains.exposed.sql.Table
 
+@Serializable
 data class RehearsalBase(var id: Int = -1, var name: String? = null,
                          var address: String? = null, var phone: String? = null,
                          var mail: String? = null, var ownerId: Int = -1)

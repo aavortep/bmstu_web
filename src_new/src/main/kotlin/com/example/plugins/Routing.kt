@@ -13,6 +13,9 @@ import com.example.dao.DAOBaseImpl
 import com.example.dao.DAORehearsalImpl
 import com.example.dao.DAORoomImpl
 import com.example.models.Account
+import com.example.models.Rehearsal
+import com.example.models.RehearsalBase
+import com.example.models.Room
 import com.google.gson.Gson
 import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
@@ -31,56 +34,55 @@ fun Application.configureRouting() {
                 val user = call.receive<Account>()
                 val account = DAOAccountImpl().login(user.mail!!, user.password!!)
                 if (account == null) call.response.status(HttpStatusCode.NotFound)
+                else {
+                    val token = JWT.create()
+                        .withAudience("http://0.0.0.0:8080/api/v1/logout",
+                            "http://0.0.0.0:8080/api/v1/users",
+                            "http://0.0.0.0:8080/api/v1/bases/{baseId}",
+                            "http://0.0.0.0:8080/api/v1/rooms",
+                            "http://0.0.0.0:8080/api/v1/rehearsals/{rehId}")
+                        .withIssuer("http://0.0.0.0:8080/api/v1/")
+                        .withClaim("mail", user.mail)
+                        .withClaim("password", user.password)
+                        .sign(Algorithm.HMAC256("secret"))
+                    // sends a token to a client as a JSON object
+                    call.respond(hashMapOf("token" to token))
 
-                val token = JWT.create()
-                    .withAudience("http://0.0.0.0:8080/api/v1/logout",
-                        "http://0.0.0.0:8080/api/v1/users",
-                        "http://0.0.0.0:8080/api/v1/bases/{baseId}",
-                        "http://0.0.0.0:8080/api/v1/rooms",
-                        "http://0.0.0.0:8080/api/v1/rehearsals/{rehId}")
-                    .withIssuer("http://0.0.0.0:8080/api/v1/")
-                    .withClaim("mail", user.mail)
-                    .withClaim("password", user.password)
-                    .sign(Algorithm.HMAC256("secret"))
-                // sends a token to a client as a JSON object
-                call.respond(hashMapOf("token" to token))
-
-                /*if (account != null) {
-                    when (account.type) {
-                        "musician" -> call.respondRedirect("/api/v1/rooms")
-                        "owner" -> call.respondRedirect("/api/v1/users/${account.id}/bases/all")
-                    }
-                }*/
+                    /*if (account != null) {
+                        when (account.type) {
+                            "musician" -> call.respondRedirect("/api/v1/rooms")
+                            "owner" -> call.respondRedirect("/api/v1/users/${account.id}/bases/all")
+                        }
+                    }*/
+                }
             }
             // register
             post("/users") {
-                val formParameters = call.receiveParameters()
-                val fio = formParameters.getOrFail("fio")
-                val phone = formParameters.getOrFail("phone")
-                val mail = formParameters.getOrFail("mail")
-                val password = formParameters.getOrFail("password")
-                val type = formParameters.getOrFail("type")
-                var account = DAOAccountImpl().login(mail, password)
+                val user = call.receive<Account>()
+                var account = DAOAccountImpl().login(user.mail!!, user.password!!)
                 if (account != null) call.response.status(HttpStatusCode.Conflict)  // user exists
-                account = DAOAccountImpl().addAccount(fio, phone, mail, password, type)
+                else {
+                    account = DAOAccountImpl().addAccount(user.fio!!, user.phone!!, user.mail!!,
+                        user.password!!, user.type!!)
 
-                val token = JWT.create()
-                    .withAudience("http://0.0.0.0:8080/api/v1/logout",
-                        "http://0.0.0.0:8080/api/v1/users",
-                        "http://0.0.0.0:8080/api/v1/bases/{baseId}",
-                        "http://0.0.0.0:8080/api/v1/rooms",
-                        "http://0.0.0.0:8080/api/v1/rehearsals/{rehId}")
-                    .withIssuer("http://0.0.0.0:8080/api/v1/")
-                    .withClaim("mail", mail)
-                    .withClaim("password", password)
-                    .sign(Algorithm.HMAC256("secret"))
-                // sends a token to a client as a JSON object
-                call.respond(hashMapOf("token" to token))
+                    val token = JWT.create()
+                        .withAudience("http://0.0.0.0:8080/api/v1/logout",
+                            "http://0.0.0.0:8080/api/v1/users",
+                            "http://0.0.0.0:8080/api/v1/bases/{baseId}",
+                            "http://0.0.0.0:8080/api/v1/rooms",
+                            "http://0.0.0.0:8080/api/v1/rehearsals/{rehId}")
+                        .withIssuer("http://0.0.0.0:8080/api/v1/")
+                        .withClaim("mail", user.mail)
+                        .withClaim("password", user.password)
+                        .sign(Algorithm.HMAC256("secret"))
+                    // sends a token to a client as a JSON object
+                    call.respond(hashMapOf("token" to token))
 
-                when (type) {
-                    "musician" -> call.respondRedirect("/api/v1/rooms")
-                    "owner" -> call.respondRedirect("/api/v1/users/${account?.id}/bases/all")
-                    else -> call.response.status(HttpStatusCode.BadRequest)
+                    /*when (type) {
+                        "musician" -> call.respondRedirect("/api/v1/rooms")
+                        "owner" -> call.respondRedirect("/api/v1/users/${account?.id}/bases/all")
+                        else -> call.response.status(HttpStatusCode.BadRequest)
+                    }*/
                 }
             }
 
@@ -104,12 +106,12 @@ fun Application.configureRouting() {
                         call.respondText { Gson().toJson(rehearsals) }
                     }
                     post("{userId}/rooms/{roomId}/rehearsals") {
-                        val time = call.receiveParameters().getOrFail("time")
+                        val reh = call.receive<Rehearsal>()
                         val musicianId = call.parameters.getOrFail<Int>("userId").toInt()
                         val roomId = call.parameters.getOrFail<Int>("roomId").toInt()
-                        val rehExists = DAORehearsalImpl().rehearsalByTime(roomId, time)
+                        val rehExists = DAORehearsalImpl().rehearsalByTime(roomId, reh.time!!)
                         if (rehExists == null) {
-                            val rehearsal = DAORehearsalImpl().addRehearsal(musicianId, roomId, time)
+                            val rehearsal = DAORehearsalImpl().addRehearsal(musicianId, roomId, reh.time!!)
                             call.respondText { Gson().toJson(rehearsal) }
                         }
                         else call.response.status(HttpStatusCode.Conflict)  // reh exists
@@ -122,15 +124,12 @@ fun Application.configureRouting() {
                         call.respondText { "Logged in as $mail\n" + Gson().toJson(bases) }
                     }
                     post("{userId}/bases") {
-                        val formParameters = call.receiveParameters()
-                        val name = formParameters.getOrFail("name")
-                        val address = formParameters.getOrFail("address")
-                        val phone = formParameters.getOrFail("phone")
-                        val mail = formParameters.getOrFail("mail")
+                        val rehbase = call.receive<RehearsalBase>()
                         val ownerId = call.parameters.getOrFail<Int>("userId").toInt()
-                        val baseExists = DAOBaseImpl().baseByAddress(address)
+                        val baseExists = DAOBaseImpl().baseByAddress(rehbase.address!!)
                         if (baseExists == null) {
-                            val base = DAOBaseImpl().addBase(ownerId, name, address, phone, mail)
+                            val base = DAOBaseImpl().addBase(ownerId, rehbase.name!!, rehbase.address!!,
+                                rehbase.phone!!, rehbase.mail!!)
                             call.respondText { Gson().toJson(base) }
                         }
                         else call.response.status(HttpStatusCode.Conflict)  // base exists
@@ -144,16 +143,13 @@ fun Application.configureRouting() {
                         call.respondText { Gson().toJson(rehs) }
                     }
                     post("{baseId}/rooms") {
-                        val formParameters = call.receiveParameters()
-                        val name = formParameters.getOrFail("name")
-                        val type = formParameters.getOrFail("type")
-                        val area = formParameters.getOrFail<Int>("area").toInt()
-                        val cost = formParameters.getOrFail<Int>("cost").toInt()
+                        val room = call.receive<Room>()
                         val baseId = call.parameters.getOrFail<Int>("baseId").toInt()
-                        val roomExists = DAORoomImpl().roomByBase(baseId, name)
+                        val roomExists = DAORoomImpl().roomByBase(baseId, room.name!!)
                         if (roomExists == null) {
-                            val room = DAORoomImpl().addRoom(baseId, name, type, area, cost)
-                            call.respondText { Gson().toJson(room) }
+                            val res_room = DAORoomImpl().addRoom(baseId, room.name!!, room.type!!,
+                                room.area, room.cost)
+                            call.respondText { Gson().toJson(res_room) }
                         }
                         else call.response.status(HttpStatusCode.Conflict)  // room exists
                     }

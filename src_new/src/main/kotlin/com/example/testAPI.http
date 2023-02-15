@@ -5,3 +5,29 @@ Content-Type: application/json
   "mail": "nura.alexevna@yandex.ru",
   "password": "1234"
 }
+
+###
+POST http://127.0.0.1:8080/api/v1/users
+Content-Type: application/json
+
+{
+  "fio": "Petrova M. A.",
+  "phone": "+7-915-200-08-43",
+  "mail": "masa.petrova@yandex.ru",
+  "password": "mashanya",
+  "type": "musician"
+}
+
+### Authorization by token, part 1. Retrieve and save token.
+POST https://httpbin.org/post
+Content-Type: application/json
+
+{
+  "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiaHR0cDovLzAuMC4wLjA6ODA4MC9hcGkvdjEvbG9nb3V0IiwiaHR0cDovLzAuMC4wLjA6ODA4MC9hcGkvdjEvdXNlcnMiLCJodHRwOi8vMC4wLjAuMDo4MDgwL2FwaS92MS9iYXNlcy97YmFzZUlkfSIsImh0dHA6Ly8wLjAuMC4wOjgwODAvYXBpL3YxL3Jvb21zIiwiaHR0cDovLzAuMC4wLjA6ODA4MC9hcGkvdjEvcmVoZWFyc2Fscy97cmVoSWR9Il0sInBhc3N3b3JkIjoibWFzaGFueWEiLCJtYWlsIjoibWFzYS5wZXRyb3ZhQHlhbmRleC5ydSIsImlzcyI6Imh0dHA6Ly8wLjAuMC4wOjgwODAvYXBpL3YxLyJ9.3rDHrqHghNwB86GFx0oZbQzbRyopzcQqXZgCcwErMSo"
+}
+
+> {% client.global.set("auth_token", response.body.json.token); %}
+
+### Authorization by token, part 2. Use token to authorize.
+GET http://127.0.0.1:8080/api/v1/users/4/bases/all
+Authorization: Bearer {{auth_token}}
