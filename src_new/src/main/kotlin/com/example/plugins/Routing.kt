@@ -43,14 +43,14 @@ fun Application.configureRouting() {
                     .withClaim("password", user.password)
                     .sign(Algorithm.HMAC256("secret"))
                 // sends a token to a client as a JSON object
-                //call.respond(hashMapOf("token" to token))
+                call.respond(hashMapOf("token" to token))
 
-                if (account != null) {
+                /*if (account != null) {
                     when (account.type) {
                         "musician" -> call.respondRedirect("/api/v1/rooms")
                         "owner" -> call.respondRedirect("/api/v1/users/${account.id}/bases/all")
                     }
-                }
+                }*/
             }
             // register
             post("/users") {
