@@ -1,0 +1,1 @@
+document.writeln("Welcome to HearBase!");
