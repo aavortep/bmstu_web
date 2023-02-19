@@ -53,6 +53,18 @@ body{
     margin-top: 20px;
     margin-bottom: 10px;
 }
+.scrollbar {
+    width: 600px;
+    height: 450px;
+    line-height: 3em;
+    overflow:scroll;
+    border: thin #000 solid;
+    padding: 5px;
+    color: #EFEFEF;
+    font-family: "Comfortaa SemiBold", sans-serif;
+    font-size: 14pt;
+    scrollbar-arrow-color: #EFEFEF;
+}
 
 #base1{
     width: 381px;

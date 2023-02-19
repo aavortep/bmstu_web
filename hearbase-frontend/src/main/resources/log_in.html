@@ -12,7 +12,7 @@
         Регистрация
     </span></h1>
 
-    <form action="http://localhost:8080/api/v1/users" method="post">
+    <form action="http://localhost:8080/api/v1/users" method="post" id="register">
         <center>
             <input type="text" id="name" name="fio" placeholder="ФИО" class="text_input">
         </center>
@@ -32,7 +32,7 @@
             <label for="owner" class="label_font">Я владелец</label>
         </center>
         <center>
-            <button type="submit" class="button">Зарегистрироваться</button>
+            <button type="submit" class="button" onclick="alert('clicked')">Зарегистрироваться</button>
         </center>
     </form>
     <center>
@@ -40,5 +40,7 @@
                 У меня уже есть аккаунт
         </span>></a>
     </center>
+
+    <script src="handlers.js"></script>
 </body>
 </html>
