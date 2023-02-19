@@ -6,6 +6,39 @@
     <link rel = "stylesheet" href = "style.css">
 </head>
 <body>
+    <a href="index.html" class="description_font"><< Назад</a>
 
+    <h1 style="text-align: center"><span class="header_font">
+        Регистрация
+    </span></h1>
+
+    <form action="http://localhost:8080/api/v1/users" method="post">
+        <center>
+            <input type="text" id="name" name="fio" placeholder="ФИО" class="text_input">
+        </center>
+        <center>
+            <input type="email" id="email" name="mail" placeholder="Почта" class="text_input">
+        </center>
+        <center>
+            <input type="tel" id="tel" name="phone" placeholder="Телефон" class="text_input">
+        </center>
+        <center>
+            <input type="password" id="pass" name="password" placeholder="Пароль" class="text_input">
+        </center>
+        <center>
+            <input type="radio" id="musician" value="musician" name="type" checked>
+            <label for="musician" class="label_font">Я музыкант</label>
+            <input type="radio" id="owner" value="owner" name="type">
+            <label for="owner" class="label_font">Я владелец</label>
+        </center>
+        <center>
+            <button type="submit" class="button">Зарегистрироваться</button>
+        </center>
+    </form>
+    <center>
+        <a href="sign_in.html"><span class="label_font">
+                У меня уже есть аккаунт
+        </span>></a>
+    </center>
 </body>
 </html>
