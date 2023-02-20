@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" name="hearbase-frontend-1.0-SNAPSHOT">
-    <output-path>$PROJECT_DIR$/build/libs</output-path>
-    <root id="archive" name="hearbase-frontend-1.0-SNAPSHOT.jar">
-      <element id="module-output" name="hearbase-frontend.main" />
-    </root>
-  </artifact>
-</component>
