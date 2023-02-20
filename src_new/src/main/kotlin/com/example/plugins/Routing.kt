@@ -34,10 +34,13 @@ fun Application.configureRouting() {
                 call.respondText { "Welcome to HearBase!" }
             }
             post("/login") {
+                val formParameters = call.receiveParameters()
+                val mail = formParameters["mail"].toString()
+                val password = formParameters["password"].toString()
                 // receives user credentials sent as a JSON object and converts it
                 // to an Account class object
-                val user = call.receive<Account>()
-                val account = DAOAccountImpl().login(user.mail!!, user.password!!)
+                //val user = call.receive<Account>()
+                val account = DAOAccountImpl().login(mail, password)
                 if (account == null) call.response.status(HttpStatusCode.NotFound)
                 else {
                     val token = JWT.create()
@@ -47,8 +50,8 @@ fun Application.configureRouting() {
                             "http://0.0.0.0:8080/api/v1/rooms",
                             "http://0.0.0.0:8080/api/v1/rehearsals/{rehId}")
                         .withIssuer("http://0.0.0.0:8080/api/v1/")
-                        .withClaim("mail", user.mail)
-                        .withClaim("password", user.password)
+                        .withClaim("mail", mail)
+                        .withClaim("password", password)
                         .sign(Algorithm.HMAC256("secret"))
                     // sends a token to a client as a JSON object
                     call.respond(hashMapOf("token" to token))
@@ -63,12 +66,16 @@ fun Application.configureRouting() {
             }
             // register
             post("/users") {
-                val user = call.receive<Account>()
-                var account = DAOAccountImpl().login(user.mail!!, user.password!!)
+                val formParameters = call.receiveParameters()
+                val fio = formParameters["fio"].toString()
+                val phone = formParameters["phone"].toString()
+                val mail = formParameters["mail"].toString()
+                val password = formParameters["password"].toString()
+                val type = formParameters["type"].toString()
+                var account = DAOAccountImpl().login(mail, password)
                 if (account != null) call.response.status(HttpStatusCode.Conflict)  // user exists
                 else {
-                    account = DAOAccountImpl().addAccount(user.fio!!, user.phone!!, user.mail!!,
-                        user.password!!, user.type!!)
+                    account = DAOAccountImpl().addAccount(fio, phone, mail, password, type)
 
                     val token = JWT.create()
                         .withAudience("http://0.0.0.0:8080/api/v1/logout",
@@ -77,8 +84,8 @@ fun Application.configureRouting() {
                             "http://0.0.0.0:8080/api/v1/rooms",
                             "http://0.0.0.0:8080/api/v1/rehearsals/{rehId}")
                         .withIssuer("http://0.0.0.0:8080/api/v1/")
-                        .withClaim("mail", user.mail)
-                        .withClaim("password", user.password)
+                        .withClaim("mail", mail)
+                        .withClaim("password", password)
                         .sign(Algorithm.HMAC256("secret"))
                     // sends a token to a client as a JSON object
                     call.respond(hashMapOf("token" to token))
