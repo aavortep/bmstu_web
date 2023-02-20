@@ -1,31 +1,24 @@
-/* eslint-disable react/jsx-no-comment-textnodes */
-import React from 'react';
 import './App.css';
-import { Route, Switch, Redirect, BrowserRouter as Router } from 'react-router-dom';
-import HomePage from './pages/home';
-import LoginPage from './pages/login';
-import SigninPage from './pages/signin';
+import { Route, Routes, Navigate, BrowserRouter as Router } from 'react-router-dom';
+import HomePage from './pages/home/home.js';
+import LoginPage from './pages/login/login.js';
+import SigninPage from './pages/signin/signin.js';
 
-class App extends React.Component {
-    render() {
-        return (
-        <div>
-            <h1 className='header_font' style={{marginLeft: 90}}>
-                Добро пожаловать в HearBase!
-            </h1>
-            <main>
-              <Router>
-                <Switch>
-                    <Route path='/home' component={HomePage} />
-                    <Route path='/login' component={LoginPage} />
-                    <Route path='/signin' component={SigninPage} />
-                    <Route exact path='/' component={<Redirect replace to='/home' />} />
-                </Switch>
-              </Router>
-            </main>
-        </div>
-    );
-    }
+function App() {
+  return (
+    <div className="App">
+      <main>
+        <Router>
+          <Routes>
+            <Route path='/home' element={<HomePage/>} />
+            <Route path='/login' element={<LoginPage/>} />
+            <Route path='/signin' element={<SigninPage/>} />
+            <Route exact path='/' element={<Navigate replace to='/home' />} />
+          </Routes>
+        </Router>
+      </main>
+    </div>
+  );
 }
 
 export default App;

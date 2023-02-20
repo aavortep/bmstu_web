@@ -1,32 +1,32 @@
 import React from "react";
 import '../../App.css';
 
-async function sendLogInData(data) {
-    return await fetch('http://localhost:8080/api/v1/users', {
-        method: 'POST',
-        body: data,
-    })
-}
-
-async function handleLogInForm(event) {
-    event.preventDefault()
-    const data = new FormData(event.target)
-    const response = await sendLogInData(data)
-    if (response.status === 200) {
-        const body = await response.json()
-        alert("Успешная регистрация:\nТокен:" + body["token"])
-    }
-    else alert(response.status)
-}
-
-const logInForm = document.getElementById('register')
-logInForm.addEventListener('submit', handleLogInForm)
+//const logInForm = document.getElementById('register')
+//logInForm.addEventListener('submit', handleLogInForm)
 
 class LoginPage extends React.Component {
+    async sendLogInData(data) {
+        return await fetch('http://localhost:8080/api/v1/users', {
+            method: 'POST',
+            body: data,
+        })
+    }
+
+    async handleLogInForm(event) {
+        event.preventDefault()
+        const data = new FormData(event.target)
+        const response = await this.sendLogInData(data)
+        if (response.status === 200) {
+            const body = await response.json()
+            alert("Успешная регистрация:\nТокен:" + body["token"])
+        }
+        else alert(response.status)
+    }
+
     render() {
         return (
             <div>
-                <a href="/home" className="description_font">
+                <a href="/home" className="description_font" style={{marginLeft: 15}}>
                     Назад
                 </a>
 
@@ -54,7 +54,7 @@ class LoginPage extends React.Component {
                         <label for="owner" className="label_font">Я владелец</label>
                     </center>
                     <center>
-                        <button type="submit" className="button">
+                        <button type="submit" className="button" onSubmit={this.handleLogInForm}>
                             Зарегистрироваться
                         </button>
                     </center>
